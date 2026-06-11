@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body,html{font-family:'Jost', sans-serif;background-color:#f8f9fa;color:#241E46;padding:15px;overflow-x:hidden}
+
+#app-container{max-width:1200px;margin:0 auto;background:#fff;padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:2px solid #EAE8F7;padding-bottom:10px}
+.main-title{font-size:24px;font-weight:700;color:#241E46}
+
+.page-indicator-badge {
+  font-size:14px;
+  font-weight:700;
+  background:#7C6EB018;
+  color:#7C6EB0;
+  padding:6px 16px;
+  border-radius:20px;
+  border:1px solid #7C6EB033;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  margin-bottom: 5px;
+}
+.category-html-title {
+  width: 320px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.canvas-container{
+  width:100%;
+  background:#fafafa;
+  border:2px solid #EAE8F7;
+  border-radius:12px;
+  margin-bottom:15px;
+  padding:10px;
+}
+canvas{display:block;margin:0 auto}
+
+.nav-btn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 5px;
+}
+.nav-page-btn {
+  font-family:'Jost', sans-serif;
+  font-size:13px;
+  font-weight:700;
+  padding:8px 18px;
+  border-radius:8px;
+  border:none;
+  background:#7C6EB0;
+  color:#fff;
+  cursor:pointer;
+  transition: background 0.2s;
+}
+.nav-page-btn:hover:not(:disabled) {
+  background:#5d5091;
+}
+.nav-page-btn:disabled {
+  opacity:0.25;
+  cursor:not-allowed;
+}
+
+#voter-panel{background:#F3F2F9;border:1px solid #D8D5F0;border-radius:12px;padding:15px;margin-bottom:20px}
+.vp-row{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.vp-row label{font-size:14px;font-weight:700;color:#241E46;min-width:80px}
+#voter-name{font-family:'Jost', sans-serif;font-size:14px;padding:8px 12px;border-radius:8px;border:2px solid #7C6EB066;background:#fff;color:#241E46;width:240px;font-weight:500}
+#voter-name:focus{outline:none;border-color:#241E46}
+#vote-counter{font-size:14px;font-weight:700;color:#7C6EB0;padding:6px 14px;border-radius:20px;background:#7C6EB018;border:1px solid #7C6EB044}
+
+#submit-btn{font-family:'Jost', sans-serif;font-size:14px;font-weight:700;padding:9px 22px;border-radius:8px;background:#241E46;color:#fff;border:none;cursor:pointer;margin-left:auto;transition:background 0.2s}
+#submit-btn:disabled{opacity:0.3;cursor:not-allowed}
+#submit-btn:hover:not(:disabled){background:#3b3275}
+#msg{font-size:13px;color:#3A8FA3;font-weight:700;margin-top:6px;height:18px}
+
+.tip-box{position:absolute;pointer-events:none;background:#241E46;color:#fff;border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.4;max-width:280px;display:none;z-index:10;box-shadow:0 6px 16px rgba(0,0,0,0.3);font-family:'Jost', sans-serif;}
+.tip-box strong{color:#63C3D1;display:block;font-size:13px;font-weight:700;margin-bottom:4px}
+.tip-box .tip-owner{color:#A296D4;font-size:12px;font-weight:600;margin-bottom:4px}
+</style>
+<title>Team Retrospective Mind Map Board</title>
+</head>
+<body>
+
+<div id="app-container">
+  <header>
+    <div class="main-title">Team Retro Mind Map Dashboard</div>
+    <div id="page-indicator" class="page-indicator-badge">Page 1: Problems</div>
+  </header>
+
+  <div class="title-row">
+    <div id="t1" class="category-html-title" style="color: #241E46;">Product &<br>Business Strategy</div>
+    <div id="t2" class="category-html-title" style="color: #7C6EB0;">Engineering Operations<br>& Tooling</div>
+    <div id="t3" class="category-html-title" style="color: #3A8FA3;">Workflow &<br>Structure Optimization</div>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="c"></canvas>
+    <div class="tip-box" id="tip"></div>
+  </div>
+
+  <div class="nav-btn-row">
+    <button id="prev-btn" class="nav-page-btn" onclick="navigatePage(-1)" disabled>← Previous Page</button>
+    <span style="font-size:12px; color:#7C6EB0; font-weight:600;">💡 Rule: You can cast up to 3 votes on EACH page before clicking Submit.</span>
+    <button id="next-btn" class="nav-page-btn" onclick="navigatePage(1)">Next Page →</button>
+  </div>
+
+  <div id="voter-panel">
+    <div class="vp-row">
+      <label for="voter-name">Your Name</label>
+      <input id="voter-name" type="text" placeholder="Type your name to begin..." oninput="onNameChange()">
+      
+      <span id="vote-counter">Current Page: 0 / 3 votes cast</span>
+
+      <button id="submit-btn" disabled onclick="submitAllVotes()">Submit All Votes</button>
+    </div>
+    <div id="msg"></div>
+  </div>
+</div>
+
+<script>
+// Your active, live Google Apps Script pipeline URL has been successfully connected below!
+const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzgyg3rAqB1_I5ieUadIQ7Yk5_fISo2Oudep3eSidEZo0LzdZRrvf8QZ3nX0-BPo5Xn/exec";
+
+const PALETTE = {
+  'Strategy':    {fill:'#241E46', light:'#EAE7F8'},
+  'Engineering': {fill:'#7C6EB0', light:'#F3F1FD'},
+  'Workflow':    {fill:'#3A8FA3', light:'#EAF5F7'}
+};
+
+let activeViewPage = 1;
+
+const multiPagesData = {
+  1: [
+    {
+      title: "Product &\nBusiness Strategy", theme: "Strategy",
+      centerX: 165, centerY: 215, radius: 125,
+      connections: [[0,1], [1,2], [3,4], [4,5]],
+      nodes: [
+        {id:'s1', label:'No Strategy\nor GTM', owner:'Fatemeh', priority:2, desc:'No clear product strategy defining paths, missing Go-To-Market tracks, and no coherent internal lunchplan framework.'},
+        {id:'s2', label:'Not Design-\nFirst Approach', owner:'Fatemeh', priority:3, desc:'Products do not follow an explicit design-first philosophy from conception stage.'},
+        {id:'s3', label:'No Collaboration\nin Hub', owner:'Fatemeh', priority:3, desc:'Missing true team sense of shared cross-collaborative work inside the hub structure.'},
+        {id:'s4', label:'Fear of Ownership\n& Responsibilities', owner:'Parya', priority:2, desc:'Team members avoid stepping up into primary ownership brackets because of fuzzy guidelines.'},
+        {id:'s5', label:'Misaligned Company\nPriorities', owner:'Parya', priority:3, desc:'The individual teams and the broader company do not clear prioritize matching action plans.'},
+        {id:'s6', label:'Lack of Structure\n& OKR Transparency', owner:'Parya', priority:1, desc:'Members are completely unaware of structural shifts, strategies, core authorities, OKRs, or KPIs.'},
+        {id:'s7', label:'No Career Path\nClarity', owner:'AliReza E', priority:1, desc:'Undefined career paths lacking a precise and real connection to the seasonal needs of the organization.'},
+        {id:'s8', label:'Fuzzy Tech Lead\nAccountability', owner:'AliReza E', priority:2, desc:'Lack of clear, functional front-end or technical lead owners deployed safely across engineering branches.'}
+      ]
+    },
+    {
+      title: "Engineering Operations\n& Tooling", theme: "Engineering",
+      centerX: 570, centerY: 215, radius: 125,
+      connections: [[0,1], [1,2], [3,4]],
+      nodes: [
+        {id:'e1', label:'Slow Dev Process\n(Discovery-to-Ship)', owner:'Komeyl', priority:2, desc:'Development processes crawl slowly from initial discovery phases down to deployment loops.'},
+        {id:'e2', label:'Slow Purchase\nProcess Blocks', owner:'Komeyl', priority:3, desc:'Procurement protocols are sluggish, introducing extreme delivery dependencies.'},
+        {id:'e3', label:'Strict Clock-In\n& Break Rules', owner:'Komeyl', priority:1, desc:'Rigid timeline restrictions surrounding work hours without real support for flexible time schedules.'},
+        {id:'e4', label:'No Claude AI\nTooling Credits', owner:'Hootan', priority:3, desc:'Failure to supply Claude credits — the top tier LLM with cutting-edge context features.'},
+        {id:'e5', label:'Lack of AI-Driven\nDevelopment', owner:'Ashkan', priority:1, desc:'Missing essential automated AI toolsets intended to write faster, robust, and resilient code.'},
+        {id:'e6', label:'Messy Git Branch\nManagement', owner:'Amin M.', priority:2, desc:'Disorganized branch branching rules producing alignment friction across engineers.'},
+        {id:'e7', label:'No Dedicated\nRefactor Time', owner:'Amin M.', priority:2, desc:'Insufficient time blocks allocated specifically toward cleaning codebase items during active sprints.'},
+        {id:'e8', label:'Codebase Tech\nAdoption Issues', owner:'Team', priority:2, desc:'Low developmental agility coupled with high operational reliance on external stakeholders during deployments.'}
+      ]
+    },
+    {
+      title: "Workflow &\nStructure Optimization", theme: "Workflow",
+      centerX: 975, centerY: 215, radius: 125,
+      connections: [[0,1], [3,4], [4,5]],
+      nodes: [
+        {id:'w1', label:'Time-Consuming Jira\n& Bitrix Logging', owner:'Mohaddeseh', priority:1, desc:'End-of-day work logging is highly tedious and consumes excessive production time.'},
+        {id:'w2', label:'Fuzzy Bitrix Logging\nRequirements', owner:'Mohaddeseh', priority:2, desc:'Confusion over whether to track high-level summaries or highly granular daily logs.'},
+        {id:'w3', label:'Missing Codebase\nDocumentation', owner:'Ashkan', priority:3, desc:'Critical documentation gaps in complex codebase projects that cause persistent onboarding confusion.'},
+        {id:'w4', label:'Missing Core Roles\n(QA/Scrum/PO)', owner:'Hootan', priority:3, desc:'Severe lack of QA analysts, Scrum Masters, and dedicated Product Owners to offload management weight.'},
+        {id:'w5', label:'Cross-Team Isolation\nFrom Hub', owner:'Hootan', priority:1, desc:'Feelings of deep detachment from alternate functional product groups, projects, and the centralized hub.'},
+        {id:'w6', label:'Over-Granular\nDocumentation', owner:'Team', priority:1, desc:'Excessive and detailed tracking of minor matters instead of distinct product versus project categorization.'},
+        {id:'w7', label:'Short & Long Term\nPlanning Deficits', owner:'Maz', priority:3, desc:'Poor strategic alignment across immediate sprint targets and long-range product lifecycles.'},
+        {id:'w8', label:'Mismatched Resource\nAllocation', owner:'Vahid', priority:2, desc:'Improper balance between current workloads and assigned resource counts across departments.'}
+      ]
+    }
+  ],
+  2: [
+    {
+      title: "Operations & Planning", theme: "Strategy",
+      centerX: 165, centerY: 215, radius: 125,
+      connections: [[0,1], [1,2], [3,4]],
+      nodes: [
+        {id:'s2_1', label:'Agreed-Upon\nStrategy Targets', owner:'Parya', priority:1, desc:'Clarify and securely track agreed-upon targets, corporate strategies, and closures across tracks.'},
+        {id:'s2_2', label:'Separate Product\nand Project Worlds', owner:'Taha', priority:2, desc:'Isolate and segment product development tracks safely away from standard task-based tech projects.'},
+        {id:'s2_3', label:'Maintain Stable\nLong-Term Planning', owner:'Maz', priority:2, desc:'Formulate strong, structured immediate and long-range timeline plans and rigidly stick to it.'},
+        {id:'s2_4', label:'Weekly Release\nCalendars', owner:'Komeyl', priority:1, desc:'Introduce a predictable weekly product calendar to keep everyone synchronized on updates.'},
+        {id:'s2_5', label:'Weekly Hub\nProduct Meetings', owner:'Fatemeh', priority:3, desc:'Conduct a recurring alignment group sync inside the core hub structure to track targets.'},
+        {id:'s2_6', label:'Unified Strategy\nAlignment Days', owner:'Komeyl', priority:1, desc:'Dedicate a focused block of time entirely to building comprehensive insight on critical targets.'}
+      ]
+    },
+    {
+      title: "Advanced Tech\n& Tooling", theme: "Engineering",
+      centerX: 570, centerY: 215, radius: 125,
+      connections: [[0,1], [2,3]],
+      nodes: [
+        {id:'e2_1', label:'Secure SSH\nPAM Gateways', owner:'Amin M.', priority:1, desc:'Implement a modern, robust Privileged Access Management protocol to control system server nodes.'},
+        {id:'e2_2', label:'Automated CI/CD\nPipelines', owner:'Amin M.', priority:1, desc:'Optimize deployment workflows to resolve lingering continuous integration bottlenecks.'},
+        {id:'e2_3', label:'Localized Tech\nTesting Sandboxes', owner:'Mohaddeseh', priority:1, desc:'Test engineering suggestions and newer technologies safely inside minor sandbox projects.'},
+        {id:'e2_4', label:'Practical Showcases\nfor Tech Tools', owner:'Ashkan', priority:1, desc:'Introduce modern development tools using live, real-world practical examples and walkthroughs.'},
+        {id:'e2_5', label:'Continuous AI\nKnowledge Feeds', owner:'Hootan', priority:1, desc:'Keep team members updated via recurring briefs on engineering news, best practices, and active AI breakthroughs.'}
+      ]
+    },
+    {
+      title: "Resource & Structural\nAdaptations", theme: "Workflow",
+      centerX: 975, centerY: 215, radius: 125,
+      connections: [[0,1], [2,3]],
+      nodes: [
+        {id:'w2_1', label:'Flexible Structure\nAdaptability', owner:'Parya', priority:1, desc:'Build higher agility inside operational frameworks by choosing flexible configurations instead of total rewrites.'},
+        {id:'w2_2', label:'Cross-Project Developer\nTime Allocation', owner:'Ashkan', priority:1, desc:'Ensure Product Managers communicate continuously to distribute shared engineer schedules cleanly.'},
+        {id:'w2_3', label:'Modular Cross-\nFunctional Teams', owner:'Fatemeh', priority:2, desc:'Form permanent development teams aligned neatly around specialized culture traits and feature outputs.'},
+        {id:'w2_4', label:'Next-Gen Tech Role\nFormations', owner:'AliReza E', priority:1, desc:'Formulate specialized functional tracks like AI Solution Architects to handle shifting market footprints.'},
+        {id:'w2_5', label:'Dedicated R&D\nFunding Laboratories', owner:'Hootan', priority:2, desc:'Allocate clear financial capital streams to construct active edge-tech exploratory environments.'}
+      ]
+    }
+  ],
+  3: [
+    {
+      title: "Team Vibe &\nWorkplace Culture", theme: "Strategy",
+      centerX: 165, centerY: 215, radius: 125,
+      connections: [[0,1], [1,2], [3,4]],
+      nodes: [
+        {id:'s3_1', label:'Good Culture\nof Learning', owner:'AliReza E', priority:1, desc:'Fostering an excellent internal learning posture driven by shared knowledge tracks.'},
+        {id:'s3_2', label:'Clear Inter-Dept\nCommunication', owner:'AliReza E', priority:1, desc:'Maintaining crisp, direct communication lines across alternative operating departments.'},
+        {id:'s3_3', label:'Openness to Project\n& Personal Feedback', owner:'Ashkan · Hootan · Vahid', priority:3, desc:'A welcoming environment for criticism and performance analysis on both personal and operational levels.'},
+        {id:'s3_4', label:'Fluid & Modern\nCompany Environment', owner:'Taha', priority:1, desc:'A flexible, advanced workplace ecosystem that matches fast-shifting cultural parameters.'},
+        {id:'s3_5', label:'Constructive Dialogue\n& Criticism Space', owner:'Parya', priority:1, desc:'A safe zone for transparent conversational exchange, design critique, and team problem-solving.'}
+      ]
+    },
+    {
+      title: "Innovation, Ownership\n& Adaptability", theme: "Engineering",
+      centerX: 570, centerY: 215, radius: 125,
+      connections: [[0,1], [2,3]],
+      nodes: [
+        {id:'e3_1', label:'Autonomy to Upgrade\n& Spot Blindspots', owner:'Parya', priority:1, desc:'Empowering creative minds with high execution freedom to target process blindspots and upgrade active structures.'},
+        {id:'e3_2', label:'Mindset of Continuous\nChange', owner:'Parya', priority:1, desc:'An open collective consciousness regarding organizational possibilities and iteration tracks.'},
+        {id:'e3_3', label:'Willingness to Make\nEverything Better', owner:'Maz', priority:3, desc:'A strong team motivation to constantly evolve current setups and perfect operations.'},
+        {id:'e3_4', label:'AI-Driven Product\nManagement Prototyping', owner:'Taha', priority:1, desc:'Utilizing smart automated AI tooling to iterate design paths and wireframe early concepts fast.'},
+        {id:'e3_5', label:'Adopting New Tooling\nacross Flows', owner:'Maz', priority:2, desc:'Actively embracing and testing new technologies within selected local flows and working team circles.'}
+      ]
+    },
+    {
+      title: "Execution Quality\n& Team Accountability", theme: "Workflow",
+      centerX: 975, centerY: 215, radius: 125,
+      connections: [[0,1]],
+      nodes: [
+        {id:'w3_1', label:'Solutions Ownership\nover Tasks', owner:'Hootan · Ashkan', priority:2, desc:'Team members taking active responsibility for overarching outcomes in the hub instead of simply executing basic task lists.'},
+        {id:'w3_2', label:'Sharp Focus on\nProject Details', owner:'Ashkan', priority:1, desc:'An eagle-eyed approach toward code precision and execution detail across complex features.'},
+        {id:'w3_3', label:'Developer Driven\nWork Quality', owner:'Team', priority:1, desc:'Engineers driving premium build metrics and supporting teammates in a positive, constructive framework.'},
+        {id:'w3_4', label:'Structured Stack &\nHub Retrospectives', owner:'Parya', priority:1, desc:'Running structured review cadences to target ongoing process errors without fully rewording static setups.'}
+      ]
+    }
+  ]
+};
+
+let selectionsByPage = { 1: [], 2: [], 3: [] }; 
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 1140, H = 450; 
+canvas.width = W; 
+canvas.height = H;
+
+const nodeRadius = 38;
+
+function getVoterName() { return document.getElementById('voter-name').value.trim(); }
+
+function onNameChange() {
+  updateUIControls();
+  draw();
+}
+
+function navigatePage(direction) {
+  activeViewPage += direction;
+  if(activeViewPage < 1) activeViewPage = 1;
+  if(activeViewPage > 3) activeViewPage = 3;
+  
+  document.getElementById('prev-btn').disabled = (activeViewPage === 1);
+  document.getElementById('next-btn').disabled = (activeViewPage === 3);
+  
+  const ind = document.getElementById('page-indicator');
+  if(activeViewPage === 1) {
+    ind.textContent = "Page 1: Problems";
+    document.getElementById('t1').innerHTML = "Product &<br>Business Strategy";
+    document.getElementById('t2').innerHTML = "Engineering Operations<br>& Tooling";
+    document.getElementById('t3').innerHTML = "Workflow &<br>Structure Optimization";
+  } else if(activeViewPage === 2) {
+    ind.textContent = "Page 2: Suggestions";
+    document.getElementById('t1').innerHTML = "Operations &<br>Planning";
+    document.getElementById('t2').innerHTML = "Advanced Tech<br>& Tooling";
+    document.getElementById('t3').innerHTML = "Resource & Structural<br>Adaptations";
+  } else {
+    ind.textContent = "Page 3: Culture & Strengths";
+    document.getElementById('t1').innerHTML = "Team Vibe &<br>Workplace Culture";
+    document.getElementById('t2').innerHTML = "Innovation, Ownership<br>& Adaptability";
+    document.getElementById('t3').innerHTML = "Execution Quality<br>& Accountability";
+  }
+  
+  updateUIControls();
+  draw();
+}
+
+function updateUIControls() {
+  const currentVotesCount = selectionsByPage[activeViewPage].length;
+  document.getElementById('vote-counter').textContent = `Current Page: ${currentVotesCount} / 3 votes cast`;
+  
+  const name = getVoterName();
+  const totalVotesCastAnywhere = selectionsByPage[1].length + selectionsByPage[2].length + selectionsByPage[3].length;
+  document.getElementById('submit-btn').disabled = !(name && totalVotesCastAnywhere > 0);
+}
+
+function getNodeCoordinates(cat, idx) {
+  const total = cat.nodes.length;
+  const angle = (idx * 2 * Math.PI / total) - Math.PI / 2;
+  const x = cat.centerX + cat.radius * Math.cos(angle);
+  const y = cat.centerY + cat.radius * Math.sin(angle);
+  return {x, y};
+}
+
+function toggleVoteAtCoordinates(mx, my) {
+  const name = getVoterName();
+  if(!name) {
+    showFeedback('⚠️ Please type your name in the input field before casting map votes.');
+    return;
+  }
+  
+  const currentCategories = multiPagesData[activeViewPage];
+  
+  for(let c = 0; c < currentCategories.length; c++) {
+    const cat = currentCategories[c];
+    for(let i = 0; i < cat.nodes.length; i++) {
+      const pos = getNodeCoordinates(cat, i);
+      if(Math.hypot(mx - pos.x, my - pos.y) < nodeRadius) {
+        const id = cat.nodes[i].id;
+        const index = selectionsByPage[activeViewPage].indexOf(id);
+        
+        if(index > -1) {
+          selectionsByPage[activeViewPage].splice(index, 1);
+        } else {
+          if(selectionsByPage[activeViewPage].length >= 3) {
+            showFeedback(`🚫 Limit Exceeded: You can select a maximum of 3 votes on this page.`);
+            return;
+          }
+          selectionsByPage[activeViewPage].push(id);
+        }
+        updateUIControls();
+        draw();
+        return;
+      }
+    }
+  }
+}
+
+function showFeedback(text) {
+  const msg = document.getElementById('msg');
+  msg.textContent = text;
+  setTimeout(() => msg.textContent = '', 4000);
+}
+
+function submitAllVotes() {
+  const name = getVoterName();
+  if(!name) return;
+  
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  showFeedback('📡 Sending votes to Google Sheets...');
+
+  let clearTextLabels = [];
+  
+  // Track and loop across choices made page by page
+  for (let p in selectionsByPage) {
+    let prefix = (p == 1) ? "[Problem] " : (p == 2) ? "[Suggestion] " : "[Culture/Strength] ";
+    selectionsByPage[p].forEach(id => {
+      for(let c = 0; c < multiPagesData[p].length; c++){
+        let found = multiPagesData[p][c].nodes.find(n => n.id === id);
+        if(found) clearTextLabels.push(prefix + found.label.replace('\n',' '));
+      }
+    });
+  }
+
+  const payload = {
+    name: name,
+    votes: clearTextLabels
+  };
+
+  fetch(GOOGLE_SHEET_URL, {
+    method: "POST",
+    mode: "no-cors", 
+    cache: "no-cache",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    selectionsByPage = { 1: [], 2: [], 3: [] };
+    document.getElementById('voter-name').value = '';
+    showFeedback('✅ Success! Your responses have been pushed straight into your Google Sheet.');
+    updateUIControls();
+    navigatePage(-(activeViewPage - 1)); 
+  })
+  .catch(error => {
+    console.error("Error sending data:", error);
+    showFeedback('❌ Error saving votes. Please check network connection.');
+    submitBtn.disabled = false;
+  });
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  
+  const activeCategories = multiPagesData[activeViewPage];
+  
+  activeCategories.forEach(cat => {
+    const col = PALETTE[cat.theme];
+    const totalNodes = cat.nodes.length;
+    
+    // Master Circles
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cat.centerX, cat.centerY, cat.radius, 0, Math.PI*2);
+    ctx.strokeStyle = col.fill + '28';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6, 5]);
+    ctx.stroke();
+    ctx.restore();
+    
+    // Connective Paths
+    cat.connections.forEach(([fromIdx, toIdx]) => {
+      if(fromIdx < totalNodes && toIdx < totalNodes) {
+        const pA = getNodeCoordinates(cat, fromIdx);
+        const pB = getNodeCoordinates(cat, toIdx);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(pA.x, pA.y);
+        ctx.lineTo(pB.x, pB.y);
+        ctx.strokeStyle = col.fill + '44';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.restore();
+      }
+    });
+    
+    // Nodes Loop
+    cat.nodes.forEach((node, i) => {
+      const pos = getNodeCoordinates(cat, i);
+      const isSelected = selectionsByPage[activeViewPage].includes(node.id);
+      
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, nodeRadius, 0, Math.PI*2);
+      ctx.fillStyle = isSelected ? col.fill : col.light;
+      ctx.fill();
+      ctx.strokeStyle = col.fill;
+      ctx.lineWidth = isSelected ? 3.5 : 1.5;
+      ctx.stroke();
+      ctx.restore();
+      
+      if(node.priority > 0) {
+        const pLabels = ['', '①', '②', '③', '④'];
+        const bx = pos.x + nodeRadius * 0.75;
+        const by = pos.y - nodeRadius * 0.75;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(bx, by, 9, 0, Math.PI*2);
+        ctx.fillStyle = "#241E46";
+        ctx.fill();
+        ctx.font = "700 11px 'Jost', sans-serif";
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(pLabels[node.priority], bx, by + 0.5);
+        ctx.restore();
+      }
+      
+      if(isSelected) {
+        const cx = pos.x - nodeRadius * 0.75;
+        const cy = pos.y - nodeRadius * 0.75;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, 9, 0, Math.PI*2);
+        ctx.fillStyle = "#63C3D1";
+        ctx.fill();
+        ctx.font = "700 11px 'Jost', sans-serif";
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("✓", cx, cy + 0.5);
+        ctx.restore();
+      }
+      
+      const lines = node.label.split('\n');
+      ctx.save();
+      ctx.font = "700 11px 'Jost', sans-serif"; 
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = isSelected ? '#fff' : '#241E46';
+      
+      const lh = 14;
+      const sy = pos.y - (lines.length - 1) * lh / 2;
+      lines.forEach((ln, idx) => ctx.fillText(ln, pos.x, sy + idx * lh));
+      ctx.restore();
+    });
+  });
+}
+
+const tip = document.getElementById('tip');
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  
+  const activeCategories = multiPagesData[activeViewPage];
+  let hoveredNode = null;
+  let hoveredCat = null;
+  let hoveredIndex = -1;
+  
+  for(let c = 0; c < activeCategories.length; c++) {
+    const cat = activeCategories[c];
+    for(let i = 0; i < cat.nodes.length; i++) {
+      const pos = getNodeCoordinates(cat, i);
+      if(Math.hypot(mx - pos.x, my - pos.y) < nodeRadius) {
+        hoveredNode = cat.nodes[i];
+        hoveredCat = cat;
+        hoveredIndex = i;
+        break;
+      }
+    }
+  }
+  
+  if(hoveredNode) {
+    const pos = getNodeCoordinates(hoveredCat, hoveredIndex);
+    tip.style.display = 'block';
+    tip.style.left = (pos.x + nodeRadius + 10) + 'px';
+    tip.style.top = (pos.y - 30) + 'px';
+    tip.innerHTML = `
+      <strong>${hoveredNode.label.replace('\n',' ')}</strong>
+      <div class="tip-owner">By: ${hoveredNode.owner} · Priority Level: ${hoveredNode.priority}</div>
+      <div style="color:rgba(255,255,255,0.9); font-size:12px; margin-top:3px;">${hoveredNode.desc}</div>
+    `;
+    canvas.style.cursor = 'pointer';
+  } else {
+    tip.style.display = 'none';
+    canvas.style.cursor = 'default';
+  }
+});
+
+canvas.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  toggleVoteAtCoordinates(mx, my);
+});
+
+document.fonts.ready.then(() => {
+  draw();
+  updateUIControls();
+});
+</script>
+
+</body>
+</html>
