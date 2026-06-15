@@ -271,12 +271,12 @@ const multiPagesData = {
     {
       title: "Team Vibe & Feedback Culture", theme: "Strategy",
       centerX: 290, centerY: 165, radius: 110,
-      connections: [[0,1], [1,2], [3,4], [4,5]],
+      connections: [[0,1], [1,2], [2,3]],
       nodes: [
-        {id:'s3_c1', label:'Excellent Team\nVibe Core', owner:'Maz', priority:1, desc:'Team vibe strength.'},
-        {id:'s3_c2', label:'Constructive Dialogue\n& Open Spaces', owner:'Alireza.E', priority:1, desc:'Space for dialogue and constructive criticism.'},
-        {id:'s3_c3', label:'Omnidirectional\nFeedback Mindset', owner:'Ashkan', priority:3, desc:'Openness to any feedback, project-wise or person-wise.'},
-        {id:'s3_c4', label:'Unified Collaborative\nTeam Players', owner:'Hootan', priority:1, desc:'Developers should be team players and support each other in a positive and constructive way.'},
+        {id:'s3_c1', label:'Team Vibe', owner:'Maz', priority:1, desc:'Team vibe.'},
+        {id:'s3_c2', label:'Constructive Dialogue\n& Open Spaces', owner:'Alireza.E', priority:2, desc:'Space for dialogue and constructive criticism'},
+        {id:'s3_c3', label:'Fresh Ideas\nWelcoming Posture', owner:'Alireza.E', priority:1, desc:'Company support in welcoming fresh ideas'},
+        {id:'s3_c4', label:'Omnidirectional\nFeedback Mindset', owner:'Ashkan', priority:3, desc:'Openness to any feedback, project-wise or person-wise.'},
         {id:'s3_c5', label:'Cross-Department\nCommunication Flow', owner:'Ashkan', priority:1, desc:'Clear communication across different departments and coworkers.'},
         {id:'s3_c6', label:'Vibrant Workplace\nEnvironment', owner:'Taha', priority:2, desc:'Good company environment.'},
         {id:'s3_c7', label:'Universal Standard\nCommunication Layouts', owner:'Maz', priority:2, desc:'Use the same good communication method everywhere. Example: Komeyl–Taha.'},
@@ -286,52 +286,31 @@ const multiPagesData = {
     {
       title: "Innovation, R&D & Tech Evolution", theme: "Engineering",
       centerX: 290, centerY: 435, radius: 110,
-      connections: [[0,1], [1,2], [2,3]],
+      connections: [[0,1]],
       nodes: [
         {id:'s3_e1', label:'Automated Prototyping\nAI Workflows', owner:'Taha', priority:2, desc:'AI-driven product management / prototyping.'},
-        {id:'s3_e2', label:'Continuous Edge\nTech Sharing Loops', owner:'Hootan', priority:1, desc:'Share updates about technology news, AI tools, and new best practices so the Hub stays up to date with edge tech.'},
-        {id:'s3_e3', label:'Localized Small\nSandbox Assays', owner:'Maz', priority:1, desc:'Test new technologies and suggestions in small projects first. Example: RWL.'},
-        {id:'s3_e4', label:'Integrated Core\nR&D Laboratories', owner:'Hootan', priority:2, desc:'Allocate money and resources for R&D about technologies and create a lab for edge-tech research where everyone can participate.'},
-        {id:'s3_e5', label:'New Practical Tool\nShowcases', owner:'Ashkan', priority:2, desc:'Introduce new tools with practical showcases and examples.'},
-        {id:'s3_e6', label:'Cross-Flow Tool\nAdoption Frameworks', owner:'Maz', priority:2, desc:'Use new technologies and tools in some of our flows and teams.'},
-        {id:'s3_e7', label:'Organizational support\nFor Tech Explorations', owner:'AliReza E', priority:4, desc:'Organizational support in exploring new technology paths, such as AI.'},
-        {id:'s3_e8', label:'Fresh Ideas\nWelcoming Posture', owner:'Alireza.E', priority:1, desc:'Company support in welcoming fresh ideas.'}
+        {id:'s3_e2', label:'Organizational support\nFor Tech Explorations', owner:'AliReza E', priority:4, desc:'Organizational support in exploring new technology paths, such as AI'},
+        {id:'s3_e3', label:'Blindspots Upgrades\nCreative Minds', owner:'Parya', priority:1, desc:'Creative-minded people who can see blind spots and upgrade projects. Example: “I sensed it in Setflow” [partly unclear].'},
+        {id:'s3_e4', label:'Systemic Mindset\nOf Change Possibilities', owner:'Parya', priority:2, desc:'Mindset of change and the ability to revise possibilities.'}
       ]
     },
     {
       title: "Workflow Process & Metrics", theme: "WorkflowProcess",
       centerX: 890, centerY: 165, radius: 110,
-      connections: [[0,1], [1,2]],
+      connections: [],
       nodes: [
-        {id:'s3_w1', label:'Inter-PM Shared\nDeveloper Balancing', owner:'Ashkan', priority:1, desc:'PMs’ time allocation due to shared developers. PMs should talk to each other to allocate time for each developer.'},
-        {id:'s3_w2', label:'Commitment-Driven\nFlexible Timelines', owner:'Komeyl', priority:1, desc:'Commitment-driven work with flexible time.'},
-        {id:'s3_w3', label:'Rigid Planning\n& Asset Continuity', owner:'Maz', priority:3, desc:'Respect each other’s time. Do long-term and short-term planning. There was a good structure; stick to it.'},
-        {id:'s3_w4', label:'Accelerated Internal\nPurchase Pathways', owner:'Komeyl', priority:3, desc:'Approving purchases under a certain amount faster.'},
-        {id:'s3_w5', label:'Working Hour Block\nFlexibility Controls', owner:'Shima', priority:1, desc:'Team/working-hour flexibility-related item.'},
-        {id:'s3_w6', label:'Dedicated Developer\nError Resolution Blocks', owner:'Vahid', priority:1, desc:'Allocate developer time to solve errors/issues.'}
+        {id:'s3_w1', label:'Enterprise OKR\nFrameworks', owner:'Vahid', priority:1, desc:'OKR.'}
       ]
     },
     {
       title: "Team Structure & Cadences", theme: "WorkflowStructure",
       centerX: 890, centerY: 435, radius: 110,
-      connections: [[0,1], [1,2], [2,3], [4,5]],
+      connections: [[0,1], [1,2]],
       nodes: [
         {id:'s3_t1', label:'Project Quality\nOversight Guardians', owner:'Nayyer', priority:1, desc:'Having a team that oversees the quality and structure of projects is a positive point.'},
         {id:'s3_t2', label:'BD Pipeline\n& Client Acquisition', owner:'Nayyer', priority:2, desc:'Now that the BD team can support better, communication with clients and acquiring new clients have improved.'},
-        {id:'s3_t3', label:'Structured Epic\nUser Stories Writing', owner:'Komeyl', priority:1, desc:'Writing clear user stories.'},
-        {id:'s3_t4', label:'Fixed Dedicated\nProduct Tribes', owner:'Mohaddeseh', priority:1, desc:'Fixed teams with fixed products so team members are aligned with their team culture.'},
-        {id:'s3_t5', label:'Hub & Stack\nReview Cadences', owner:'Pouya', priority:1, desc:'Hub retrospective and stack retrospectives.'},
-        {id:'s3_t6', label:'Weekly Release\nCalendar Track', owner:'Fatemeh', priority:1, desc:'Weekly release calendar to know about product updates.'},
-        {id:'s3_t7', label:'Design-First Core\nExecution Models', owner:'Fatemeh', priority:1, desc:'Decision-making based on design; design is one step of product.'},
-        {id:'s3_t8', label:'Clarify System\nAgreed-Upon Goals', owner:'Taha', priority:1, desc:'Clarify “Agreed Upon” items: targets, strategies, responsibilities, deadlines, and product suggestions.'},
-        {id:'s3_t9', label:'Blindspots Upgrades\nCreative Minds', owner:'Parya', priority:1, desc:'Creative-minded people who can see blind spots and upgrade projects.'},
-        {id:'s3_t10', label:'Robust Enterprise\nOKR Frameworks', owner:'Vahid', priority:1, desc:'OKR.'},
-        {id:'s3_t11', label:'Micro Precision\nProject Quality', owner:'Ashkan', priority:2, desc:'Sharp eyes for details and attention to details across projects.'},
-        {id:'s3_t12', label:'Separate Management\nSilo Segregations', owner:'Taha', priority:2, desc:'Separate product/project responsibilities from tech responsibilities and from each other.'},
-        {id:'s3_t13', label:'Systemic Mindset\nOf Change Possibilities', owner:'Parya', priority:2, desc:'Mindset of change and the ability to revise possibilities.'},
-        {id:'s3_t14', label:'Premium Engineering\nBuild Metrics', owner:'Vahid', priority:2, desc:'Quality of work.'},
-        {id:'s3_t15', label:'Hub Product Group\nSync Schedules', owner:'Fatemeh', priority:3, desc:'Weekly product meeting in the Hub.'},
-        {id:'s3_t16', label:'Unmapped Metric\nReview Nodes', owner:'Parya', priority:3, desc:'[item number exists, but the text is unclear / not written clearly]'}
+        {id:'s3_t3', label:'Premium Engineering\nBuild Metrics', owner:'Vahid', priority:2, desc:'Quality of work.'},
+        {id:'s3_t4', label:'Micro Precision\nProject Quality', owner:'Ashkan', priority:2, desc:'Sharp eyes for details and attention to details across projects.'}
       ]
     }
   ]
@@ -493,6 +472,11 @@ function draw() {
   const activeCategories = multiPagesData[activeViewPage];
   
   activeCategories.forEach(cat => {
+    if (activeViewPage > 1 && cat.theme === "WorkflowProcess") {
+       cat.centerY = 300;
+       cat.radius = 135;
+    }
+    
     const col = PALETTE[cat.theme];
     const totalNodes = cat.nodes.length;
     
